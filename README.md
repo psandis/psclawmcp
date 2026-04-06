@@ -1,12 +1,14 @@
 # psclawmcp
 
+[![npm](https://img.shields.io/npm/v/psclawmcp?style=flat-square)](https://www.npmjs.com/package/psclawmcp)
+
 MCP server for the OpenClaw CLI ecosystem. Exposes [feedclaw](https://github.com/psandis/feedclaw), [dustclaw](https://github.com/psandis/dustclaw), [driftclaw](https://github.com/psandis/driftclaw), and [dietclaw](https://github.com/psandis/dietclaw) as tools over the [Model Context Protocol](https://modelcontextprotocol.io), so AI assistants can use them directly.
 
 ## What It Does
 
 - wraps existing OpenClaw CLIs as MCP tools — no library rework needed
 - spawns each CLI as a subprocess with `--json` for structured output
-- one MCP tool per CLI subcommand (13 tools across 4 CLIs)
+- one MCP tool per CLI subcommand (17 tools across 4 CLIs)
 - auto-discovers tool definitions — add a new CLI by dropping a file in `src/tools/`
 - communicates over stdio transport
 
@@ -41,18 +43,26 @@ Each tool file in `src/tools/` exports an array of `ToolDef` objects. The server
 ```
 psclawmcp/
 ├── src/
-│   ├── index.ts              # MCP server entry point, auto-registers tools
-│   ├── runner.ts             # generic subprocess runner (--json, timeout, error handling)
+│   ├── index.ts          # server entry point
+│   ├── runner.ts         # subprocess runner
 │   └── tools/
-│       ├── types.ts          # ToolDef interface
-│       ├── index.ts          # aggregates all tool files
-│       ├── feedclaw.ts       # feedclaw_list, feedclaw_fetch, feedclaw_digest, feedclaw_add, feedclaw_remove
-│       ├── dustclaw.ts       # dustclaw_overview, dustclaw_scan, dustclaw_wasteland
-│       ├── driftclaw.ts      # driftclaw_check, driftclaw_drift
-│       └── dietclaw.ts       # dietclaw_scan, dietclaw_deps, dietclaw_trend
+│       ├── types.ts      # ToolDef interface
+│       ├── index.ts      # tool aggregator
+│       ├── feedclaw.ts
+│       ├── dustclaw.ts
+│       ├── driftclaw.ts
+│       └── dietclaw.ts
 ├── tests/
+│   ├── runner.test.ts
+│   ├── tools.test.ts
+│   ├── server.test.ts
+│   ├── feedclaw.test.ts
+│   ├── dustclaw.test.ts
+│   ├── driftclaw.test.ts
+│   └── dietclaw.test.ts
 ├── package.json
 ├── tsconfig.json
+├── tsup.config.ts
 ├── biome.json
 ├── LICENSE
 └── README.md
@@ -61,21 +71,23 @@ psclawmcp/
 ## Requirements
 
 - Node 22+
-- pnpm
-- The claw CLIs you want to use must be installed and on your PATH:
-  - `npm install -g feedclaw` — RSS/Atom feeds and AI digests
-  - `npm install -g dustclaw` — disk space analysis
-  - `npm install -g driftclaw` — deployment version drift
-  - `npm install -g dietclaw` — codebase health monitoring
 
 ## Install
 
 ```bash
-git clone https://github.com/psandis/psclawmcp.git
-cd psclawmcp
-pnpm install
-pnpm build
+npm install -g psclawmcp
 ```
+
+Then install whichever claw tools you want to use:
+
+```bash
+npm install -g feedclaw    # RSS/Atom feeds and AI digests
+npm install -g dustclaw    # disk space analysis
+npm install -g driftclaw   # deployment version drift
+npm install -g dietclaw    # codebase health monitoring
+```
+
+Only the tools you install will be available through the MCP server.
 
 ## Configuration
 
@@ -85,20 +97,8 @@ Add to your MCP client config (e.g. Claude Desktop `claude_desktop_config.json`)
 {
   "mcpServers": {
     "psclawmcp": {
-      "command": "node",
-      "args": ["/path/to/psclawmcp/dist/index.js"]
-    }
-  }
-}
-```
-
-Or if installed globally:
-
-```json
-{
-  "mcpServers": {
-    "psclawmcp": {
-      "command": "psclawmcp"
+      "command": "npx",
+      "args": ["-y", "psclawmcp"]
     }
   }
 }
@@ -106,21 +106,42 @@ Or if installed globally:
 
 ## Available Tools
 
-| Tool | CLI | Description |
-|------|-----|-------------|
-| `feedclaw_list` | feedclaw | List subscribed feeds |
-| `feedclaw_fetch` | feedclaw | Fetch new articles |
-| `feedclaw_digest` | feedclaw | Generate AI digest |
-| `feedclaw_add` | feedclaw | Subscribe to a feed |
-| `feedclaw_remove` | feedclaw | Unsubscribe from a feed |
-| `dustclaw_overview` | dustclaw | Disk usage overview |
-| `dustclaw_scan` | dustclaw | Deep scan for large files |
-| `dustclaw_wasteland` | dustclaw | Find dev/OS space wasters |
-| `driftclaw_check` | driftclaw | Check service version across environments |
-| `driftclaw_drift` | driftclaw | Show services with version drift |
-| `dietclaw_scan` | dietclaw | Project health report |
-| `dietclaw_deps` | dietclaw | Dependency analysis |
-| `dietclaw_trend` | dietclaw | Health trends over time |
+### feedclaw — RSS/Atom feeds and AI digests
+
+| Tool | Description |
+|------|-------------|
+| `feedclaw_init` | Set up default curated feeds |
+| `feedclaw_add` | Subscribe to a feed by URL |
+| `feedclaw_remove` | Unsubscribe from a feed |
+| `feedclaw_list` | List subscribed feeds |
+| `feedclaw_fetch` | Pull new articles from feeds |
+| `feedclaw_digest` | Generate AI-powered article summary |
+| `feedclaw_opml_import` | Import feeds from OPML file |
+| `feedclaw_opml_export` | Export feeds as OPML |
+
+### dustclaw — disk space analysis
+
+| Tool | Description |
+|------|-------------|
+| `dustclaw_overview` | Disk usage, free space, top directories |
+| `dustclaw_scan` | Ranked list of largest files and folders |
+| `dustclaw_wasteland` | Find known dev/OS space wasters |
+
+### driftclaw — deployment version drift
+
+| Tool | Description |
+|------|-------------|
+| `driftclaw_report` | Full version matrix across all environments |
+| `driftclaw_check` | Check a single service across environments |
+| `driftclaw_drift` | Show only services with version drift |
+
+### dietclaw — codebase health monitoring
+
+| Tool | Description |
+|------|-------------|
+| `dietclaw_scan` | Project health report |
+| `dietclaw_deps` | Dependency analysis — outdated, unused, heavy |
+| `dietclaw_trend` | Health trends over time |
 
 ## Adding a New Tool
 
@@ -163,6 +184,18 @@ export const allTools: ToolDef[] = [
   ...newclawTools,
 ];
 ```
+
+## Testing
+
+```bash
+pnpm test
+```
+
+Current bar:
+
+- 60 tests across 7 test files
+- every tool's argument mapping verified against CLI flags
+- runner tests use mocked child_process
 
 ## Development
 

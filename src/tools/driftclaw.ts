@@ -6,6 +6,24 @@ const BIN = "driftclaw";
 
 export const tools: ToolDef[] = [
   {
+    name: "driftclaw_report",
+    title: "Full Report",
+    description: "Full version drift report across all services and environments.",
+    inputSchema: z.object({
+      config: z.string().optional().describe("Path to driftclaw.yaml config"),
+      fail_on_drift: z
+        .boolean()
+        .optional()
+        .describe("Exit with code 1 when drift is detected (useful for CI)"),
+    }),
+    run: async (args) => {
+      const cmd: string[] = [];
+      if (args.config) cmd.push("--config", String(args.config));
+      if (args.fail_on_drift) cmd.push("--fail-on-drift");
+      return runTool(BIN, cmd);
+    },
+  },
+  {
     name: "driftclaw_check",
     title: "Check Service",
     description: "Check a single service version across all environments.",

@@ -1,33 +1,77 @@
 #!/usr/bin/env node
 
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { allTools } from "./tools/index.js";
+import { Command } from "commander";
+import { getConfigPath, loadConfig, saveConfig } from "./config.js";
+import { registry } from "./registry.js";
+import { startServer } from "./server.js";
 
-const server = new McpServer({
-  name: "psclawmcp",
-  version: "0.1.0",
+const program = new Command();
+
+program.name("psclawmcp").description("MCP server for the OpenClaw CLI ecosystem").version("0.1.0");
+
+program
+  .command("add <tool>")
+  .description("Enable a claw tool")
+  .action((tool: string) => {
+    const entry = registry.find((r) => r.name === tool);
+    if (!entry) {
+      console.error(`Unknown tool: ${tool}`);
+      console.error(`Available: ${registry.map((r) => r.name).join(", ")}`);
+      process.exit(1);
+    }
+    const config = loadConfig();
+    if (config.tools.includes(tool)) {
+      console.log(`${tool} is already enabled`);
+      return;
+    }
+    config.tools.push(tool);
+    saveConfig(config);
+    console.log(`Added ${tool} — ${entry.description}`);
+  });
+
+program
+  .command("remove <tool>")
+  .description("Disable a claw tool")
+  .action((tool: string) => {
+    const config = loadConfig();
+    if (!config.tools.includes(tool)) {
+      console.log(`${tool} is not enabled`);
+      return;
+    }
+    config.tools = config.tools.filter((t) => t !== tool);
+    saveConfig(config);
+    console.log(`Removed ${tool}`);
+  });
+
+program
+  .command("list")
+  .description("Show available and enabled tools")
+  .action(() => {
+    const config = loadConfig();
+    console.log("\nAvailable tools:\n");
+    for (const entry of registry) {
+      const enabled = config.tools.includes(entry.name);
+      const marker = enabled ? "✓" : " ";
+      console.log(`  [${marker}] ${entry.name.padEnd(12)} ${entry.description}`);
+    }
+    console.log(`\nConfig: ${getConfigPath()}\n`);
+  });
+
+program
+  .command("start")
+  .description("Start the MCP server")
+  .action(async () => {
+    await startServer();
+  });
+
+program.action(async () => {
+  const config = loadConfig();
+  if (config.tools.length === 0) {
+    program.outputHelp();
+    console.log("\nNo tools enabled. Run: psclawmcp add <tool>\n");
+  } else {
+    await startServer();
+  }
 });
 
-for (const tool of allTools) {
-  server.registerTool(
-    tool.name,
-    {
-      title: tool.title,
-      description: tool.description,
-      inputSchema: tool.inputSchema,
-    },
-    async (args: Record<string, unknown>) => tool.run(args),
-  );
-}
-
-async function main() {
-  const transport = new StdioServerTransport();
-  await server.connect(transport);
-  console.error(`psclawmcp running — ${allTools.length} tools registered`);
-}
-
-main().catch((error) => {
-  console.error("Fatal:", error);
-  process.exit(1);
-});
+program.parse();
