@@ -1,0 +1,51 @@
+{
+  "name": "psclawmcp",
+  "version": "0.1.0",
+  "description": "MCP server for the OpenClaw CLI ecosystem",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/psandis/psclawmcp.git"
+  },
+  "homepage": "https://github.com/psandis/psclawmcp",
+  "type": "module",
+  "bin": {
+    "psclawmcp": "dist/index.js"
+  },
+  "files": ["dist"],
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsup",
+    "test": "vitest run",
+    "lint": "biome check",
+    "format": "biome format --write",
+    "prepublishOnly": "pnpm build"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "openclaw",
+    "cli",
+    "feedclaw",
+    "dustclaw",
+    "driftclaw",
+    "dietclaw"
+  ],
+  "author": "psandis",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@types/node": "^22.13.0",
+    "tsup": "^8.3.6",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@10.12.1"
+}
