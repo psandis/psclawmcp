@@ -14,7 +14,7 @@ export async function startServer() {
 
   const server = new McpServer({
     name: "psclawmcp",
-    version: "0.1.0",
+    version: "0.2.0",
   });
 
   for (const tool of enabledTools) {

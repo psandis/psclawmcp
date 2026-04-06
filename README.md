@@ -43,7 +43,10 @@ Each tool file in `src/tools/` exports an array of `ToolDef` objects. The server
 ```
 psclawmcp/
 ├── src/
-│   ├── index.ts          # server entry point
+│   ├── index.ts          # CLI entry point
+│   ├── server.ts         # MCP server
+│   ├── config.ts         # config persistence
+│   ├── registry.ts       # available tools registry
 │   ├── runner.ts         # subprocess runner
 │   └── tools/
 │       ├── types.ts      # ToolDef interface
@@ -78,18 +81,42 @@ psclawmcp/
 npm install -g psclawmcp
 ```
 
-Then install whichever claw tools you want to use:
+## Usage
+
+Pick which tools to enable:
 
 ```bash
-npm install -g feedclaw    # RSS/Atom feeds and AI digests
-npm install -g dustclaw    # disk space analysis
-npm install -g driftclaw   # deployment version drift
-npm install -g dietclaw    # codebase health monitoring
+psclawmcp add feedclaw
+psclawmcp add dustclaw
+psclawmcp list
 ```
 
-Only the tools you install will be available through the MCP server.
+```
+Available tools:
 
-## Configuration
+  [✓] feedclaw     RSS/Atom feeds and AI digests
+  [✓] dustclaw     disk space analysis
+  [ ] driftclaw    deployment version drift
+  [ ] dietclaw     codebase health monitoring
+```
+
+Remove a tool:
+
+```bash
+psclawmcp remove feedclaw
+```
+
+Start the MCP server:
+
+```bash
+psclawmcp start
+```
+
+Running `psclawmcp` with no arguments starts the server if tools are enabled, or shows help if none are.
+
+Configuration is stored at `~/.psclawmcp/config.json`.
+
+## MCP Client Configuration
 
 Add to your MCP client config (e.g. Claude Desktop `claude_desktop_config.json`):
 
@@ -97,8 +124,8 @@ Add to your MCP client config (e.g. Claude Desktop `claude_desktop_config.json`)
 {
   "mcpServers": {
     "psclawmcp": {
-      "command": "npx",
-      "args": ["-y", "psclawmcp"]
+      "command": "psclawmcp",
+      "args": ["start"]
     }
   }
 }

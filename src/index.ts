@@ -7,7 +7,7 @@ import { startServer } from "./server.js";
 
 const program = new Command();
 
-program.name("psclawmcp").description("MCP server for the OpenClaw CLI ecosystem").version("0.1.0");
+program.name("psclawmcp").description("MCP server for the OpenClaw CLI ecosystem").version("0.2.0");
 
 program
   .command("add <tool>")
