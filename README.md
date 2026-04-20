@@ -2,13 +2,13 @@
 
 [![npm](https://img.shields.io/npm/v/psclawmcp?style=flat-square)](https://www.npmjs.com/package/psclawmcp)
 
-MCP server for the OpenClaw CLI ecosystem. Exposes [feedclaw](https://github.com/psandis/feedclaw), [dustclaw](https://github.com/psandis/dustclaw), [driftclaw](https://github.com/psandis/driftclaw), and [dietclaw](https://github.com/psandis/dietclaw) as tools over the [Model Context Protocol](https://modelcontextprotocol.io), so AI assistants can use them directly.
+MCP server for the OpenClaw CLI ecosystem. Exposes [feedclaw](https://github.com/psandis/feedclaw), [dustclaw](https://github.com/psandis/dustclaw), [driftclaw](https://github.com/psandis/driftclaw), [dietclaw](https://github.com/psandis/dietclaw), and [wirewatch](https://github.com/psandis/wirewatch) as tools over the [Model Context Protocol](https://modelcontextprotocol.io), so AI assistants can use them directly.
 
 ## What It Does
 
 - wraps existing OpenClaw CLIs as MCP tools — no library rework needed
 - spawns each CLI as a subprocess with `--json` for structured output
-- one MCP tool per CLI subcommand (17 tools across 4 CLIs)
+- one MCP tool per CLI subcommand (25 tools across 5 CLIs)
 - auto-discovers tool definitions — add a new CLI by dropping a file in `src/tools/`
 - communicates over stdio transport
 
@@ -54,7 +54,8 @@ psclawmcp/
 │       ├── feedclaw.ts
 │       ├── dustclaw.ts
 │       ├── driftclaw.ts
-│       └── dietclaw.ts
+│       ├── dietclaw.ts
+│       └── wirewatch.ts
 ├── tests/
 │   ├── runner.test.ts
 │   ├── tools.test.ts
@@ -62,7 +63,8 @@ psclawmcp/
 │   ├── feedclaw.test.ts
 │   ├── dustclaw.test.ts
 │   ├── driftclaw.test.ts
-│   └── dietclaw.test.ts
+│   ├── dietclaw.test.ts
+│   └── wirewatch.test.ts
 ├── package.json
 ├── tsconfig.json
 ├── tsup.config.ts
@@ -170,6 +172,19 @@ Add to your MCP client config (e.g. Claude Desktop `claude_desktop_config.json`)
 | `dietclaw_deps` | Dependency analysis — outdated, unused, heavy |
 | `dietclaw_trend` | Health trends over time |
 
+### wirewatch — network traffic monitoring
+
+| Tool | Description |
+|------|-------------|
+| `wirewatch_start` | Start the background capture daemon |
+| `wirewatch_stop` | Stop the background capture daemon |
+| `wirewatch_status` | Daemon status, uptime, and connection count |
+| `wirewatch_list` | List captured connections with filters |
+| `wirewatch_show` | Full details for a single connection by ID |
+| `wirewatch_analyze` | Send recent connections to AI for anomaly detection |
+| `wirewatch_analyses` | List past AI analyses with risk levels |
+| `wirewatch_db_stats` | Database statistics |
+
 ## Adding a New Tool
 
 Create a new file in `src/tools/`, for example `src/tools/newclaw.ts`:
@@ -220,7 +235,7 @@ pnpm test
 
 Current bar:
 
-- 60 tests across 7 test files
+- 77 tests across 8 test files
 - every tool's argument mapping verified against CLI flags
 - runner tests use mocked child_process
 
@@ -240,6 +255,7 @@ pnpm test
 - [dustclaw](https://github.com/psandis/dustclaw) — Disk space analysis
 - [driftclaw](https://github.com/psandis/driftclaw) — Deployment version drift detection
 - [dietclaw](https://github.com/psandis/dietclaw) — Codebase health monitoring
+- [wirewatch](https://github.com/psandis/wirewatch) — Network traffic monitoring and AI anomaly detection
 
 ## License
 

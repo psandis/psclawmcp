@@ -1,7 +1,10 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import pkg from "../package.json";
 import { loadConfig } from "./config.js";
 import { allTools } from "./tools/index.js";
+
+const { version } = pkg;
 
 export async function startServer() {
   const config = loadConfig();
@@ -14,7 +17,7 @@ export async function startServer() {
 
   const server = new McpServer({
     name: "psclawmcp",
-    version: "0.2.0",
+    version,
   });
 
   for (const tool of enabledTools) {

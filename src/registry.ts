@@ -8,4 +8,5 @@ export const registry: RegistryEntry[] = [
   { name: "dustclaw", description: "disk space analysis" },
   { name: "driftclaw", description: "deployment version drift" },
   { name: "dietclaw", description: "codebase health monitoring" },
+  { name: "wirewatch", description: "network traffic monitoring and AI anomaly detection" },
 ];

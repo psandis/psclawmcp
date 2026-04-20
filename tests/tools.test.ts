@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest";
 import { allTools } from "../src/tools/index.js";
 
 describe("tool definitions", () => {
-  it("exports 17 tools total", () => {
-    expect(allTools).toHaveLength(17);
+  it("exports 25 tools total", () => {
+    expect(allTools).toHaveLength(25);
   });
 
   it("every tool has required fields", () => {
@@ -23,13 +23,15 @@ describe("tool definitions", () => {
 
   it("all tool names are prefixed with CLI name", () => {
     for (const tool of allTools) {
-      expect(tool.name).toMatch(/^(feedclaw|dustclaw|driftclaw|dietclaw)_/);
+      expect(tool.name).toMatch(/^(feedclaw|dustclaw|driftclaw|dietclaw|wirewatch)_/);
     }
   });
 
-  it("includes tools from all 4 CLIs", () => {
+  it("includes tools from all 5 CLIs", () => {
     const prefixes = new Set(allTools.map((t) => t.name.split("_")[0]));
-    expect(prefixes).toEqual(new Set(["feedclaw", "dustclaw", "driftclaw", "dietclaw"]));
+    expect(prefixes).toEqual(
+      new Set(["feedclaw", "dustclaw", "driftclaw", "dietclaw", "wirewatch"]),
+    );
   });
 });
 
@@ -95,5 +97,25 @@ describe("dietclaw tools", () => {
     expect(names).toContain("dietclaw_scan");
     expect(names).toContain("dietclaw_deps");
     expect(names).toContain("dietclaw_trend");
+  });
+});
+
+describe("wirewatch tools", () => {
+  const wwTools = allTools.filter((t) => t.name.startsWith("wirewatch_"));
+
+  it("has 8 tools", () => {
+    expect(wwTools).toHaveLength(8);
+  });
+
+  it("includes all commands", () => {
+    const names = wwTools.map((t) => t.name);
+    expect(names).toContain("wirewatch_start");
+    expect(names).toContain("wirewatch_stop");
+    expect(names).toContain("wirewatch_status");
+    expect(names).toContain("wirewatch_list");
+    expect(names).toContain("wirewatch_show");
+    expect(names).toContain("wirewatch_analyze");
+    expect(names).toContain("wirewatch_analyses");
+    expect(names).toContain("wirewatch_db_stats");
   });
 });
