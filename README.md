@@ -6,10 +6,10 @@ MCP server for the OpenClaw CLI ecosystem. Exposes [feedclaw](https://github.com
 
 ## What It Does
 
-- wraps existing OpenClaw CLIs as MCP tools — no library rework needed
+- wraps existing OpenClaw CLIs as MCP tools: no library rework needed
 - spawns each CLI as a subprocess with `--json` for structured output
 - one MCP tool per CLI subcommand (25 tools across 5 CLIs)
-- auto-discovers tool definitions — add a new CLI by dropping a file in `src/tools/`
+- auto-discovers tool definitions: add a new CLI by dropping a file in `src/tools/`
 - communicates over stdio transport
 
 ## Architecture
@@ -135,7 +135,7 @@ Add to your MCP client config (e.g. Claude Desktop `claude_desktop_config.json`)
 
 ## Available Tools
 
-### feedclaw — RSS/Atom feeds and AI digests
+### feedclaw  RSS/Atom feeds and AI digests
 
 | Tool | Description |
 |------|-------------|
@@ -148,7 +148,7 @@ Add to your MCP client config (e.g. Claude Desktop `claude_desktop_config.json`)
 | `feedclaw_opml_import` | Import feeds from OPML file |
 | `feedclaw_opml_export` | Export feeds as OPML |
 
-### dustclaw — disk space analysis
+### dustclaw  disk space analysis
 
 | Tool | Description |
 |------|-------------|
@@ -156,7 +156,7 @@ Add to your MCP client config (e.g. Claude Desktop `claude_desktop_config.json`)
 | `dustclaw_scan` | Ranked list of largest files and folders |
 | `dustclaw_wasteland` | Find known dev/OS space wasters |
 
-### driftclaw — deployment version drift
+### driftclaw  deployment version drift
 
 | Tool | Description |
 |------|-------------|
@@ -164,15 +164,15 @@ Add to your MCP client config (e.g. Claude Desktop `claude_desktop_config.json`)
 | `driftclaw_check` | Check a single service across environments |
 | `driftclaw_drift` | Show only services with version drift |
 
-### dietclaw — codebase health monitoring
+### dietclaw  codebase health monitoring
 
 | Tool | Description |
 |------|-------------|
 | `dietclaw_scan` | Project health report |
-| `dietclaw_deps` | Dependency analysis — outdated, unused, heavy |
+| `dietclaw_deps` | Dependency analysis, outdated, unused, heavy |
 | `dietclaw_trend` | Health trends over time |
 
-### wirewatch — network traffic monitoring
+### wirewatch  network traffic monitoring
 
 | Tool | Description |
 |------|-------------|
@@ -251,11 +251,11 @@ pnpm test
 
 ## Related
 
-- [feedclaw](https://github.com/psandis/feedclaw) — RSS/Atom feed reader and AI digest builder
-- [dustclaw](https://github.com/psandis/dustclaw) — Disk space analysis
-- [driftclaw](https://github.com/psandis/driftclaw) — Deployment version drift detection
-- [dietclaw](https://github.com/psandis/dietclaw) — Codebase health monitoring
-- [wirewatch](https://github.com/psandis/wirewatch) — Network traffic monitoring and AI anomaly detection
+- [feedclaw](https://github.com/psandis/feedclaw) RSS/Atom feed reader and AI digest builder
+- [dustclaw](https://github.com/psandis/dustclaw) Disk space analysis
+- [driftclaw](https://github.com/psandis/driftclaw) Deployment version drift detection
+- [dietclaw](https://github.com/psandis/dietclaw) Codebase health monitoring
+- [wirewatch](https://github.com/psandis/wirewatch) Network traffic monitoring and AI anomaly detection
 
 ## License
 
