@@ -100,6 +100,7 @@ Available tools:
   [✓] dustclaw     disk space analysis
   [ ] driftclaw    deployment version drift
   [ ] dietclaw     codebase health monitoring
+  [ ] wirewatch    network traffic monitoring and AI anomaly detection
 ```
 
 Remove a tool:
