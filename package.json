@@ -28,7 +28,8 @@
     "feedclaw",
     "dustclaw",
     "driftclaw",
-    "dietclaw"
+    "dietclaw",
+    "wirewatch"
   ],
   "author": "psandis",
   "license": "MIT",

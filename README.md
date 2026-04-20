@@ -32,7 +32,7 @@ AI Client (Claude, etc.)
 └─────────┼─────────┘
           │
     ┌─────▼─────┐
-    │  CLI tools │   feedclaw, dustclaw, driftclaw, dietclaw
+    │  CLI tools │   feedclaw, dustclaw, driftclaw, dietclaw, wirewatch
     └───────────┘
 ```
 
